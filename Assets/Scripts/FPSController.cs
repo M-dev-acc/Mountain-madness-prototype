@@ -1,78 +1,63 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(CharacterController))]
 public class FPSController : MonoBehaviour
 {
-    public Camera playerCamera;
-    public float walkSpeed = 6f;
-    public float runSpeed = 12f;
-    public float jumpPower = 7f;
-    public float gravity = 10f;
+    private Rigidbody rb;
 
-    public float lookSpeed = 2f;
-    public float lookXLimit = 45f; // Fixed variable name
+    [Header("Movement Settings")]
+    public float hopHeight = 3f;      // Lower height for controlled hops
+    public float moveDistance = 1.2f; // Grid-based movement
+    public float hopCooldown = 0.3f;  // Cooldown to prevent mid-air hopping
 
-    Vector3 moveDirection = Vector3.zero;
-    float rotationX = 0;
-
-    public bool canMove = true;
-    public bool isOnGround = true;
-
-    CharacterController characterController;
+    private bool canHop = true;
 
     void Start()
     {
-        characterController = GetComponent<CharacterController>();
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
+        rb = GetComponent<Rigidbody>();
+
+        if (rb == null)
+        {
+            Debug.LogError("Rigidbody not found! Ensure the character has a Rigidbody.");
+            return;
+        }
+
+        rb.useGravity = true;
+        rb.isKinematic = false;
+        rb.freezeRotation = true;
+
+        // Increase gravity slightly for faster landing
+        rb.mass = 2f;  // Increase mass to make gravity more effective
     }
 
     void Update()
     {
-        Vector3 forward = transform.TransformDirection(Vector3.forward);
-        Vector3 right = transform.TransformDirection(Vector3.right);
-
-        bool isRunning = Input.GetKey(KeyCode.LeftShift);
-        float cursorSpeedX = canMove ? (isRunning ? runSpeed : walkSpeed) * Input.GetAxis("Vertical") : 0;
-        float cursorSpeedY = canMove ? (isRunning ? runSpeed : walkSpeed) * Input.GetAxis("Horizontal") : 0;
-
-        float previousY = moveDirection.y; // Preserve Y velocity
-
-        moveDirection = (forward * cursorSpeedX) + (right * cursorSpeedY);
-        moveDirection.y = previousY;
-
-        if (Input.GetButton("Jump") && canMove && characterController.isGrounded)
+        if (canHop && IsGrounded() && (Input.GetAxisRaw("Horizontal") != 0 || Input.GetAxisRaw("Vertical") != 0))
         {
-            isOnGround = false;
-            moveDirection.y = jumpPower;
-        }
-
-        if (!characterController.isGrounded)
-        {
-            isOnGround = true;
-            moveDirection.y -= gravity * Time.deltaTime;
-        }
-
-        characterController.Move(moveDirection * Time.deltaTime);
-
-        if (canMove)
-        {
-            rotationX += -Input.GetAxis("Mouse Y") * lookSpeed;
-            rotationX = Mathf.Clamp(rotationX, -lookXLimit, lookXLimit);
-            playerCamera.transform.localRotation = Quaternion.Euler(rotationX, 0, 0);
-            transform.rotation *= Quaternion.Euler(0, Input.GetAxis("Mouse X") * lookSpeed, 0);
+            Hop();
         }
     }
 
-    private void OnCollisionEnter(Collision collision)
+    void Hop()
     {
-        if (collision.gameObject.CompareTag("Ground"))
-        {
-            Debug.Log("On ground");
-            isOnGround = true;
-        }
+        float moveX = Mathf.Round(Input.GetAxisRaw("Horizontal")) * moveDistance;
+        float moveZ = Mathf.Round(Input.GetAxisRaw("Vertical")) * moveDistance;
+
+        Vector3 hopVelocity = new Vector3(moveX, hopHeight, moveZ); 
+
+        rb.velocity = hopVelocity; // Directly set velocity to prevent force stacking
+
+        canHop = false;
+        Invoke(nameof(ResetHop), hopCooldown);
+    }
+
+    void ResetHop()
+    {
+        canHop = true;
+    }
+
+    bool IsGrounded()
+    {
+        // More accurate ground check with small buffer distance
+        return Physics.Raycast(transform.position, Vector3.down, 1.2f);
     }
 }

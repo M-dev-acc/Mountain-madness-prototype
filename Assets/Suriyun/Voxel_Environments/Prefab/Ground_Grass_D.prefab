@@ -11,8 +11,8 @@ GameObject:
   - component: {fileID: 2303790651989448907}
   - component: {fileID: 2303790651986548971}
   - component: {fileID: 2303790651987679787}
-  - component: {fileID: 2804025573257765858}
-  - component: {fileID: 6038154654817289478}
+  - component: {fileID: -2228111055635452320}
+  - component: {fileID: -7354530132853181693}
   m_Layer: 0
   m_Name: Ground_Grass_D
   m_TagString: Ground
@@ -85,7 +85,7 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!54 &2804025573257765858
+--- !u!54 &-2228111055635452320
 Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -108,11 +108,11 @@ Rigidbody:
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
   m_UseGravity: 0
-  m_IsKinematic: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 14
   m_CollisionDetection: 0
---- !u!65 &6038154654817289478
+--- !u!65 &-7354530132853181693
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

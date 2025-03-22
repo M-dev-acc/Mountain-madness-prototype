@@ -11,8 +11,8 @@ GameObject:
   - component: {fileID: 389422324050032571}
   - component: {fileID: 389422324051326875}
   - component: {fileID: 389422324052325723}
-  - component: {fileID: -5883770818536818404}
-  - component: {fileID: -4571854717427363600}
+  - component: {fileID: -4897097088581279044}
+  - component: {fileID: 3331660884956920005}
   m_Layer: 0
   m_Name: Ground_Sand_A
   m_TagString: Ground
@@ -85,7 +85,7 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!54 &-5883770818536818404
+--- !u!54 &-4897097088581279044
 Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -108,11 +108,11 @@ Rigidbody:
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
   m_UseGravity: 0
-  m_IsKinematic: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 14
   m_CollisionDetection: 0
---- !u!65 &-4571854717427363600
+--- !u!65 &3331660884956920005
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
