@@ -2,8 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class PlayerMovementController : MonoBehaviour
 {
+    [Header("Player Settings")]
     public float rotationSpeed = 200f;
     public float hopDistance = 1f;
     public float hopHeight = 0.5f;
@@ -11,6 +13,10 @@ public class PlayerMovementController : MonoBehaviour
     private bool isHopping = false;
 
     private Quaternion targetRotation;
+
+    [Header("Camera Settings")]
+    public Transform cameraTransform; // 🎥 Assign your Cinemachine Virtual Camera's transform here
+    public float cameraRotationSpeed = 5f; // For smoother camera rotation
 
     void Start()
     {
@@ -31,8 +37,6 @@ public class PlayerMovementController : MonoBehaviour
             TurnLeft();
         else if (Input.GetKeyDown(KeyCode.RightArrow))
             TurnRight();
-        else if (Input.GetKeyDown(KeyCode.Space))
-            StartCoroutine(BunnyHop());
     }
 
     // -----------------------
@@ -42,11 +46,13 @@ public class PlayerMovementController : MonoBehaviour
     public void TurnLeft()
     {
         targetRotation *= Quaternion.Euler(0, -90, 0);
+        RotateCamera(-90);
     }
 
     public void TurnRight()
     {
         targetRotation *= Quaternion.Euler(0, 90, 0);
+        RotateCamera(90);
     }
 
     void SmoothRotate()
@@ -55,30 +61,19 @@ public class PlayerMovementController : MonoBehaviour
     }
 
     // -----------------------
-    // 🐰 BUNNY HOP MECHANIC
+    // 🎥 CAMERA ROTATION
     // -----------------------
 
-    IEnumerator BunnyHop()
+    private void RotateCamera(float angle)
     {
-        isHopping = true;
+        if (cameraTransform == null) return;
 
-        Vector3 startPos = transform.position;
-        Vector3 direction = transform.forward;
-        Vector3 endPos = startPos + direction * hopDistance;
+        // Rotate the camera around the player
+        Vector3 pivot = transform.position;
+        cameraTransform.RotateAround(pivot, Vector3.up, angle);
 
-        float elapsedTime = 0f;
-
-        while (elapsedTime < hopDuration)
-        {
-            float t = elapsedTime / hopDuration;
-            float height = Mathf.Sin(Mathf.PI * t) * hopHeight; // parabolic arc
-            transform.position = Vector3.Lerp(startPos, endPos, t) + Vector3.up * height;
-
-            elapsedTime += Time.deltaTime;
-            yield return null;
-        }
-
-        transform.position = endPos;
-        isHopping = false;
+        // Optionally, re-align camera's local rotation to look at the player smoothly
+        Quaternion targetCamRotation = Quaternion.LookRotation(transform.position - cameraTransform.position);
+        cameraTransform.rotation = Quaternion.Slerp(cameraTransform.rotation, targetCamRotation, cameraRotationSpeed * Time.deltaTime);
     }
 }
