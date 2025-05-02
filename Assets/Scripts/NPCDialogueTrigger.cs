@@ -1,29 +1,29 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
-
 
 public class NPCDialogueTrigger : MonoBehaviour
 {
-    // public Dialogue dialogue;
+    public Dialogue dialogue;
 
-    // private bool hasTriggered = false;
+    // Start is called before the first frame update
+    void Start()
+    {
 
-    // private void OnTriggerEnter(Collider other)
-    // {
-    //     if (!hasTriggered && other.CompareTag("Player"))
-    //     {
-    //         hasTriggered = true;
+    }
 
-    //         // Start the dialogue
-    //         DialogueManager.Instance.StartDialogue(dialogue);
-    //     }
-    // }
+    // Update is called once per frame
+    void Update()
+    {
 
-    // private void OnTriggerExit(Collider other)
-    // {
-    //     if (other.CompareTag("Player"))
-    //     {
-    //         // Reset so player can interact again later if needed
-    //         hasTriggered = false;
-    //     }
-    // }
+    }
+    
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            DialogueManager.Instance.StartDialogue(dialogue);
+            Debug.Log("Hey!!!");
+        }
+    }
 }
