@@ -1,9 +1,8 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-[CreateAssetMenu(fileName = "NewDialogue", menuName = "Dialogue System/Dialogue")]
+[CreateAssetMenu(fileName = "NewDialogue", menuName = "Dialogue System/Create a Dialogue")]
 public class DialogueNode:ScriptableObject
 {
     public string speakerName;

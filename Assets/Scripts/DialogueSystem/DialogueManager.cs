@@ -8,7 +8,7 @@ public class DialogueManager : MonoBehaviour
     private DialogueData currentDialogue;
     private DialogueNode currentNode;
 
-    private bool isRunning = false;
+    public bool IsRunning{ get; private set; } = false;
 
     // Externally call this to start a dialogue
     public void StartDialogue(DialogueData dialogueData)
@@ -21,14 +21,14 @@ public class DialogueManager : MonoBehaviour
 
         currentDialogue = dialogueData;
         currentNode = currentDialogue.rootNode;
-        isRunning = true;
+        IsRunning = true;
 
         ShowCurrentNode();
     }
 
     private void ShowCurrentNode()
     {
-        if (!isRunning || currentNode == null)
+        if (!IsRunning || currentNode == null)
         {
             Debug.LogWarning("Dialogue not running or no current node.");
             return;
@@ -79,11 +79,11 @@ public class DialogueManager : MonoBehaviour
         }
     }
 
-    private void EndDialogue()
+    public void EndDialogue()
     {
         Debug.Log("Dialogue ended.");
         dialogueUI.HideDialogue();
-        isRunning = false;
+        IsRunning = false;
         currentNode = null;
         currentDialogue = null;
     }
@@ -91,6 +91,6 @@ public class DialogueManager : MonoBehaviour
     // Optional: expose running state
     public bool IsDialogueRunning()
     {
-        return isRunning;
+        return IsRunning;
     }
 }

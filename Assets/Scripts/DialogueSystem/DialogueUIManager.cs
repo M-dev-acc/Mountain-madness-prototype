@@ -13,6 +13,7 @@ public class DialogueUIManager : MonoBehaviour
     public TextMeshProUGUI dialogueText;
     public Transform choicePanel;
     public GameObject choiceButtonPrefab;
+    public DialogueManager dialogueManager;
 
     private List<GameObject> currentChoiceButtons = new List<GameObject>();
 
@@ -95,6 +96,7 @@ public class DialogueUIManager : MonoBehaviour
         button.onClick.AddListener(() =>
         {
             HideDialogue();
+            dialogueManager.EndDialogue();
         });
 
         currentChoiceButtons.Add(endButtonObj);

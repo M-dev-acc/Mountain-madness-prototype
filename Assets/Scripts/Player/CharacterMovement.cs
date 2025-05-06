@@ -2,50 +2,60 @@ using System.Collections;
 using Cinemachine;
 using UnityEngine;
 
+using UnityEngine;
+using Cinemachine;
+
 public class CharacterMovement : MonoBehaviour
 {
     public CharacterController controller;
-
-    public static CharacterMovement Instance { get; private set; }
     public CinemachineFreeLook camera;
-    public float cameraRotationSpeed = 5f;
+
     public float rotationSpeed = 200f;
     public float hopDistance = 1.3f;
     public float hopHeight = 1.3f;
     public float hopDuration = 0.3f;
-    private bool isHopping = false;
 
-    private Quaternion targetRotation;
-
-    // Gravity
-    private float gravity = -9.81f;
-    private Vector3 velocity;
-    private bool isGrounded;
-
-    // Stamina
     public float maxStamina = 100f;
-    public float stamina;
     public float staminaDrain = 5f;
     public float staminaRegen = 5f;
     public float criticalStaminaLevel = 35f;
-    private bool canHop = true;
+
+    private float stamina;
+    private bool isHopping = false;
     private bool canMove = true;
 
+    private Quaternion targetRotation;
+    private Transform cachedTransform;
+
+    // Hop movement
+    private float hopTimer;
+    private Vector3 hopStartPos;
+    private Vector3 hopEndPos;
+
+    // Gravity
+    private Vector3 velocity;
+    private float gravity = -9.81f;
+
+    private bool isGrounded;
+    private bool warnedLowStamina = false;
+
+    public static CharacterMovement Instance { get; private set; }
 
     void Awake()
     {
         Instance = this;
+        cachedTransform = transform;
     }
 
     void Start()
     {
         stamina = maxStamina;
-        targetRotation = transform.rotation;
+        targetRotation = cachedTransform.rotation;
 
         if (camera != null)
         {
-            camera.Follow = transform;
-            camera.LookAt = transform;
+            camera.Follow = cachedTransform;
+            camera.LookAt = cachedTransform;
         }
     }
 
@@ -53,146 +63,146 @@ public class CharacterMovement : MonoBehaviour
     {
         if (!canMove) return;
 
-        isGrounded = controller.isGrounded;
-
-        if (isGrounded && velocity.y < 0)
-        {
-            velocity.y = -2f; // Small negative to stick to ground
-        }
-
         HandleInput();
         SmoothRotate();
-
-        ApplyGravity();
         RegenerateStamina();
     }
 
-    // ----------------------
-    // INPUT
-    // ----------------------
+    void FixedUpdate()
+    {
+        isGrounded = controller.isGrounded;
 
+        if (isGrounded && velocity.y < 0f)
+            velocity.y = -2f; // small downward force to keep grounded
+
+        if (isHopping)
+        {
+            HandleHop();
+        }
+        else
+        {
+            ApplyGravity();
+        }
+    }
+
+    // -----------------------------
+    // Input
+    // -----------------------------
     void HandleInput()
     {
         if (isHopping) return;
 
         if (Input.GetKeyDown(KeyCode.LeftArrow))
-            TurnLeft();
+            RotateLeft();
         else if (Input.GetKeyDown(KeyCode.RightArrow))
-            TurnRight();
-        else if (Input.GetKeyDown(KeyCode.Space) && isGrounded && canHop)
-            StartCoroutine(BunnyHop());
+            RotateRight();
+        else if (Input.GetKeyDown(KeyCode.Space) && isGrounded && stamina >= staminaDrain)
+            StartHop();
     }
 
-    // ----------------------
-    // TURNING
-    // ----------------------
-
-    public void TurnLeft()
+    // -----------------------------
+    // Rotation
+    // -----------------------------
+    void RotateLeft()
     {
         targetRotation *= Quaternion.Euler(0, -90, 0);
-        if (camera != null)
-            camera.m_XAxis.Value -= 90;
+        if (camera != null) camera.m_XAxis.Value -= 90;
     }
 
-    public void TurnRight()
+    void RotateRight()
     {
         targetRotation *= Quaternion.Euler(0, 90, 0);
-        if (camera != null)
-            camera.m_XAxis.Value += 90;
+        if (camera != null) camera.m_XAxis.Value += 90;
     }
 
     void SmoothRotate()
     {
-        transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+        cachedTransform.rotation = Quaternion.RotateTowards(
+            cachedTransform.rotation,
+            targetRotation,
+            rotationSpeed * Time.deltaTime
+        );
     }
 
-    // ----------------------
-    // BUNNY HOP
-    // ----------------------
-
-    IEnumerator BunnyHop()
+    // -----------------------------
+    // Hop System with Grid Snapping
+    // -----------------------------
+    void StartHop()
     {
-        if (stamina < staminaDrain)
-        {
-            canHop = false;
-            yield break;
-        }
-
         isHopping = true;
         stamina -= staminaDrain;
 
-        float elapsed = 0f;
-        float initialYVelocity = Mathf.Sqrt(2 * hopHeight * -gravity); // Standard physics formula
-        Vector3 hopDirection = transform.forward.normalized * hopDistance;
-
-        Vector3 horizontalStart = transform.position;
-        Vector3 horizontalEnd = horizontalStart + hopDirection;
-
-        while (elapsed < hopDuration)
-        {
-            float t = elapsed / hopDuration;
-
-            // Smooth horizontal movement from start to end
-            Vector3 horizontalMove = Vector3.Lerp(horizontalStart, horizontalEnd, t);
-            // Smooth vertical arc using a sine wave
-            float verticalOffset = Mathf.Sin(t * Mathf.PI) * hopHeight;
-
-            Vector3 nextPosition = horizontalMove + Vector3.up * verticalOffset;
-
-            // Move to next position relative to current position
-            Vector3 moveDelta = nextPosition - transform.position;
-            controller.Move(moveDelta);
-
-            elapsed += Time.deltaTime;
-            yield return null;
-        }
-
-        isHopping = false;
-
-        if (stamina < staminaDrain)
-            canHop = false;
+        hopTimer = 0f;
+        hopStartPos = SnapToGrid(cachedTransform.position); // Snaps to grid
+        hopEndPos = SnapToGrid(hopStartPos + cachedTransform.forward * hopDistance); // Snaps to grid
     }
 
+    void HandleHop()
+    {
+        hopTimer += Time.fixedDeltaTime;
+        float t = hopTimer / hopDuration;
 
-    // ----------------------
-    // GRAVITY
-    // ----------------------
+        if (t >= 1f)
+        {
+            controller.Move(hopEndPos - cachedTransform.position); // final snap
+            isHopping = false;
+            return;
+        }
 
+        Vector3 horizontal = Vector3.Lerp(hopStartPos, hopEndPos, t);
+        float verticalOffset = Mathf.Sin(t * Mathf.PI) * hopHeight;
+        Vector3 targetPos = horizontal + Vector3.up * verticalOffset;
+
+        controller.Move(targetPos - cachedTransform.position);
+    }
+
+    // Snapping function to align with grid
+    Vector3 SnapToGrid(Vector3 position)
+    {
+        return new Vector3(
+            Mathf.Round(position.x),
+            Mathf.Round(position.y),
+            Mathf.Round(position.z)
+        );
+    }
+
+    // -----------------------------
+    // Gravity
+    // -----------------------------
     void ApplyGravity()
     {
-        if (!isHopping)
-        {
-            velocity.y += gravity * Time.deltaTime;
-            controller.Move(velocity * Time.deltaTime);
-        }
+        velocity.y += gravity * Time.fixedDeltaTime;
+        controller.Move(velocity * Time.fixedDeltaTime);
     }
 
-    // ----------------------
-    // STAMINA
-    // ----------------------
-
+    // -----------------------------
+    // Stamina
+    // -----------------------------
     void RegenerateStamina()
     {
         if (!isHopping && stamina < maxStamina)
         {
             stamina += staminaRegen * Time.deltaTime;
-            if (stamina >= staminaDrain)
-                canHop = true;
-
-            if (stamina > maxStamina)
-                stamina = maxStamina;
+            stamina = Mathf.Min(stamina, maxStamina);
         }
 
-        if (stamina <= criticalStaminaLevel)
-            Debug.Log("Stamina is draining — get some grass you dummy!!!");
+        if (stamina <= criticalStaminaLevel && !warnedLowStamina)
+        {
+            Debug.Log("Stamina is low — rest or eat!");
+            warnedLowStamina = true;
+        }
+        else if (stamina > criticalStaminaLevel)
+        {
+            warnedLowStamina = false;
+        }
     }
 
-    public void SetMomentEnabled(bool enabled)
+    // -----------------------------
+    // Public Controls
+    // -----------------------------
+    public void SetMovement(bool isEnabled)
     {
         if (!isHopping)
-        {
-            canMove = enabled;
-        }
+            canMove = isEnabled;
     }
-
 }

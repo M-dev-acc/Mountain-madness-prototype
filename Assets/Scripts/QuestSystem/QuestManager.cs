@@ -5,13 +5,14 @@ using UnityEngine;
 public class QuestManager : MonoBehaviour
 {
     public List<QuestInstance> activeQuests = new List<QuestInstance>();
+    public QuestUIManager questUIManager;
 
     public void AssignQuest(QuestSO quest)
     {
         if (activeQuests.Exists(q => q.questData == quest)) return;
         var questInstance = new QuestInstance(quest);
         activeQuests.Add(questInstance);
-        Debug.Log($"Assigned quest: {quest.title}");
+        // Debug.Log($"Assigned quest: {quest.title}");
     }
 
     public void SubmitItem(string itemId, int amount)
@@ -25,6 +26,8 @@ public class QuestManager : MonoBehaviour
                 // TODO: Add additional logic
             }
         }
+
+        questUIManager?.UpdateProgressUI();
     }
 
     public void PrintProgress()
@@ -38,5 +41,12 @@ public class QuestManager : MonoBehaviour
                 Debug.Log($"  {obj.itemId}: {progress}/{obj.requiredAmount}");
             }
         }
+    }
+
+    public bool isQuestAssigned(QuestSO quest)
+    {
+        bool isQuestAssigned = activeQuests.Exists(q => q.questData == quest) ? true : false;
+        
+        return isQuestAssigned;
     }
 }
