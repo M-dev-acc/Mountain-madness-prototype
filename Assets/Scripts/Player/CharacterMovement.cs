@@ -20,7 +20,7 @@ public class CharacterMovement : MonoBehaviour
     public float staminaRegen = 5f;
     public float criticalStaminaLevel = 35f;
 
-    private float stamina;
+    public float stamina;
     private bool isHopping = false;
     private bool canMove = true;
 
@@ -65,7 +65,7 @@ public class CharacterMovement : MonoBehaviour
 
         HandleInput();
         SmoothRotate();
-        RegenerateStamina();
+        // RegenerateStamina();
     }
 
     void FixedUpdate()
