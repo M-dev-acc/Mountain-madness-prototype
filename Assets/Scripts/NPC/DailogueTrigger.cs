@@ -16,7 +16,7 @@ public class DailogueTrigger : MonoBehaviour
         {
             dialogueManager.StartDialogue(dialogueData);
             CharacterMovement player = other.gameObject.GetComponent<CharacterMovement>();
-            player.SetMovement(false);
+            player?.SetMovement(false);
         }
     }
 

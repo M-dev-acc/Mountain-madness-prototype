@@ -14,6 +14,6 @@ public class FillHealthBar : MonoBehaviour
     }
     void Update()
     {
-        slider.value = player.stamina / player.maxStamina;
+        slider.value = HealthManager.Instance.GetStaminaPercent();
     }
 }

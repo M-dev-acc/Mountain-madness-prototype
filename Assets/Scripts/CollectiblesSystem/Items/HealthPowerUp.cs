@@ -9,6 +9,6 @@ public class HealthPowerUp : CollectibleItemSO
     public float amount;
     public override void ApplyEffect(GameObject collector)
     {
-        collector.GetComponent<CharacterMovement>().stamina += amount;
+        collector.GetComponent<HealthManager>().AddStamina(amount);
     }
 }

@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class CharacterMovement : MonoBehaviour
 {
+    public static CharacterMovement Instance { get; private set; }
     public CharacterController controller;
     public CinemachineFreeLook camera;
 
@@ -11,12 +12,7 @@ public class CharacterMovement : MonoBehaviour
     public float hopHeight = 1.3f;
     public float hopDuration = 0.3f;
 
-    public float maxStamina = 100f;
-    public float staminaDrain = 2f;
-    public float staminaRegen = 5f;
-    public float criticalStaminaLevel = 35f;
-
-    public float stamina;
+    
     private bool isHopping = false;
     private bool canMove = true;
 
@@ -33,9 +29,8 @@ public class CharacterMovement : MonoBehaviour
     private float gravity = -9.81f;
 
     private bool isGrounded;
-    private bool warnedLowStamina = false;
 
-    public static CharacterMovement Instance { get; private set; }
+    private HealthManager healthManager;
 
     void Awake()
     {
@@ -45,7 +40,7 @@ public class CharacterMovement : MonoBehaviour
 
     void Start()
     {
-        stamina = maxStamina;
+        healthManager = HealthManager.Instance;
         targetRotation = cachedTransform.rotation;
 
         if (camera != null)
@@ -92,7 +87,7 @@ public class CharacterMovement : MonoBehaviour
             RotateLeft();
         else if (Input.GetKeyDown(KeyCode.RightArrow))
             RotateRight();
-        else if (Input.GetKeyDown(KeyCode.Space) && isGrounded && stamina >= staminaDrain)
+        else if (Input.GetKeyDown(KeyCode.Space) && isGrounded && healthManager.DecreaseStamina(healthManager.staminaDrain))
             StartHop();
     }
 
@@ -126,7 +121,6 @@ public class CharacterMovement : MonoBehaviour
     void StartHop()
     {
         isHopping = true;
-        stamina -= staminaDrain;
 
         hopTimer = 0f;
         hopStartPos = SnapToGrid(cachedTransform.position); // Snaps to grid
@@ -171,34 +165,13 @@ public class CharacterMovement : MonoBehaviour
         controller.Move(velocity * Time.fixedDeltaTime);
     }
 
-    // -----------------------------
-    // Stamina
-    // -----------------------------
-    void RegenerateStamina()
-    {
-        if (!isHopping && stamina < maxStamina)
-        {
-            stamina += staminaRegen * Time.deltaTime;
-            stamina = Mathf.Min(stamina, maxStamina);
-        }
-
-        if (stamina <= criticalStaminaLevel && !warnedLowStamina)
-        {
-            Debug.Log("Stamina is low — rest or eat!");
-            warnedLowStamina = true;
-        }
-        else if (stamina > criticalStaminaLevel)
-        {
-            warnedLowStamina = false;
-        }
-    }
+    
 
     // -----------------------------
     // Public Controls
     // -----------------------------
     public void SetMovement(bool isEnabled)
     {
-        if (!isHopping)
-            canMove = isEnabled;
+        canMove = isEnabled;
     }
 }
