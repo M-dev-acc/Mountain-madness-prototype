@@ -1,18 +1,24 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class QuestManager : MonoBehaviour
 {
+    public static QuestManager Instance { get;  private set;}
     public List<QuestInstance> activeQuests = new List<QuestInstance>();
     public QuestUIManager questUIManager;
+    public event Action<QuestSO> onQuestAssigned;
+
+    void Awake()
+    {
+        Instance = this;
+    }
 
     public void AssignQuest(QuestSO quest)
     {
         if (activeQuests.Exists(q => q.questData == quest)) return;
         var questInstance = new QuestInstance(quest);
         activeQuests.Add(questInstance);
-        // Debug.Log($"Assigned quest: {quest.title}");
     }
 
     public void SubmitItem(string itemId, int amount)

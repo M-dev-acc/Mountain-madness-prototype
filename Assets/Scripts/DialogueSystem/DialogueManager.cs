@@ -81,7 +81,6 @@ public class DialogueManager : MonoBehaviour
 
     public void EndDialogue()
     {
-        Debug.Log("Dialogue ended.");
         dialogueUI.HideDialogue();
         IsRunning = false;
         currentNode = null;

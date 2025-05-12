@@ -6,5 +6,6 @@ public class CollectSilverBloomQuestItem : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         silverBloomQuestItem.ApplyEffect(other.gameObject);
+        Destroy(gameObject);
     }
 }

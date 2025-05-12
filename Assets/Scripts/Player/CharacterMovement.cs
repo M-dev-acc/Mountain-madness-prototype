@@ -1,9 +1,5 @@
-using System.Collections;
 using Cinemachine;
 using UnityEngine;
-
-using UnityEngine;
-using Cinemachine;
 
 public class CharacterMovement : MonoBehaviour
 {
@@ -16,7 +12,7 @@ public class CharacterMovement : MonoBehaviour
     public float hopDuration = 0.3f;
 
     public float maxStamina = 100f;
-    public float staminaDrain = 5f;
+    public float staminaDrain = 2f;
     public float staminaRegen = 5f;
     public float criticalStaminaLevel = 35f;
 

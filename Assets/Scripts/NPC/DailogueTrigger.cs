@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class DailogueTrigger : MonoBehaviour
@@ -10,12 +8,12 @@ public class DailogueTrigger : MonoBehaviour
     [SerializeField] private QuestManager questManager;
     [SerializeField] private QuestSO testQuest;
     [SerializeField] private QuestUIManager questUIManager;
+    [SerializeField] private QuestItemManager questItemManager;
 
     void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
         {
-            Debug.Log(other);
             dialogueManager.StartDialogue(dialogueData);
             CharacterMovement player = other.gameObject.GetComponent<CharacterMovement>();
             player.SetMovement(false);
@@ -27,7 +25,6 @@ public class DailogueTrigger : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             CharacterMovement player = other.gameObject.GetComponent<CharacterMovement>();
-            // player.setMovement(false);
             if (!dialogueManager.IsDialogueRunning())
             {
                 player?.SetMovement(true);
@@ -41,6 +38,7 @@ public class DailogueTrigger : MonoBehaviour
         {
             questManager?.AssignQuest(testQuest);
             questUIManager?.ShowQuests();
+            questItemManager?.ShowQuestItems(testQuest);
         }
     }
 }
