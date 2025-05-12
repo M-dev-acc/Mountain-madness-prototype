@@ -11,7 +11,6 @@ public class CharacterMovement : MonoBehaviour
     public float hopDistance = 1.3f;
     public float hopHeight = 1.3f;
     public float hopDuration = 0.3f;
-
     
     private bool isHopping = false;
     private bool canMove = true;

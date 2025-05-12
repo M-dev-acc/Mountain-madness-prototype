@@ -57,6 +57,7 @@ public class HealthManager : MonoBehaviour
         if (stamina >= amount)
         {
             stamina += amount;
+            stamina = (stamina > maxStamina) ? maxStamina : stamina;
             return true;
         }
         return false;

@@ -10,13 +10,16 @@ public class DailogueTrigger : MonoBehaviour
     [SerializeField] private QuestUIManager questUIManager;
     [SerializeField] private QuestItemManager questItemManager;
 
+    private int intercationCount = 0;
+
     void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player"))
+        if (other.CompareTag("Player") && intercationCount == 0)
         {
             dialogueManager.StartDialogue(dialogueData);
             CharacterMovement player = other.gameObject.GetComponent<CharacterMovement>();
             player?.SetMovement(false);
+            intercationCount++;
         }
     }
 
