@@ -19,7 +19,7 @@ public class DialogueUIManager : MonoBehaviour
 
     private IEnumerator AutoSelectOnlyChoice(string dialogueText, System.Action<int> onChoiceSelected)
     {
-        float delayTime = Math.Clamp(dialogueText.Length * 0.05f, 3.0f, 10.0f);
+        float delayTime = Math.Clamp(dialogueText.Length * 0.08f, 3.0f, 10.0f);
         yield return new WaitForSeconds(delayTime);
 
         onChoiceSelected?.Invoke(0);

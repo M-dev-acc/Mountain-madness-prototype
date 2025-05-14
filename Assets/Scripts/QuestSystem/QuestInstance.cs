@@ -25,6 +25,13 @@ public class QuestInstance
             progress[itemId] = GetRequiredAmount(itemId);
     }
 
+    public void ResetProgress(string itemId)
+    {
+        if (!progress.ContainsKey(itemId)) return;
+
+        progress[itemId] = 0;
+    }
+
     public bool CheckCompletion()
     {
         foreach (var obj in questData.objectives)

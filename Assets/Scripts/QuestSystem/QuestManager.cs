@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class QuestManager : MonoBehaviour
 {
-    public static QuestManager Instance { get;  private set;}
+    public static QuestManager Instance { get; private set; }
     public List<QuestInstance> activeQuests = new List<QuestInstance>();
     public QuestUIManager questUIManager;
     public event Action<QuestSO> onQuestAssigned;
@@ -40,7 +40,6 @@ public class QuestManager : MonoBehaviour
     {
         foreach (var quest in activeQuests)
         {
-            Debug.Log($"Quest: {quest.questData.title}");
             foreach (var obj in quest.questData.objectives)
             {
                 int progress = quest.progress[obj.itemId];
@@ -52,7 +51,17 @@ public class QuestManager : MonoBehaviour
     public bool isQuestAssigned(QuestSO quest)
     {
         bool isQuestAssigned = activeQuests.Exists(q => q.questData == quest) ? true : false;
-        
+
         return isQuestAssigned;
+    }
+
+    public void ResetQuest(string itemId)
+    {
+        foreach (var quest in activeQuests)
+        {
+            quest.ResetProgress(itemId);
+        }
+
+        questUIManager?.UpdateProgressUI();
     }
 }

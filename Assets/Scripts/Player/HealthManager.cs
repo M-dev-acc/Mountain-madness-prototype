@@ -1,5 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 
 public class HealthManager : MonoBehaviour
@@ -7,6 +6,7 @@ public class HealthManager : MonoBehaviour
     public static HealthManager Instance { get; private set; }
     public float stamina { get; private set; }
 
+    public event Action OnDeath;
     public float maxStamina = 100f;
     public float staminaDrain = 2f;
     public float staminaRegen = 5f;
@@ -65,9 +65,16 @@ public class HealthManager : MonoBehaviour
 
     public bool DecreaseStamina(float amount)
     {
-        if (stamina >= amount)
+        if (stamina >= amount && stamina > 0)
         {
             stamina -= amount;
+
+            if (stamina <= 0)
+            {
+                stamina = 0;
+                Die();
+            }
+
             return true;
         }
         return false;
@@ -78,7 +85,18 @@ public class HealthManager : MonoBehaviour
         if (stamina >= amount)
         {
             stamina *= amount;
+            if (stamina <= 0)
+            {
+                stamina = 0;
+                Die();
+            }
         }
+    }
+
+    private void Die()
+    {
+       
+        OnDeath?.Invoke();
     }
 
     public float GetStaminaPercent()

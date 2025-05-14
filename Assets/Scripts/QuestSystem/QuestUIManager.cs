@@ -57,7 +57,7 @@ public class QuestUIManager : MonoBehaviour
                 var text = objectiveGO.GetComponent<TextMeshProUGUI>();
 
                 int progress = quest.progress[obj.itemId];
-                text.text = $"{obj.itemId}: {progress}/{obj.requiredAmount}";
+                text.text = $"{obj.objectiveId}: {progress}/{obj.requiredAmount}";
             }       
             activeQuestUI[quest] = questUI;
         }
