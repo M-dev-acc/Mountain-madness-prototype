@@ -31,17 +31,14 @@ public class DailogueTrigger : MonoBehaviour
             if (!dialogueManager.IsDialogueRunning())
             {
                 player?.SetMovement(true);
-            }
-        }
-    }
 
-    void OnTriggerExit(Collider other)
-    {
-        if (!questManager.isQuestAssigned(testQuest))
-        {
-            questManager?.AssignQuest(testQuest);
-            questUIManager?.ShowQuests();
-            questItemManager?.ShowQuestItems(testQuest);
+                if (!questManager.isQuestAssigned(testQuest))
+                {
+                    questManager?.AssignQuest(testQuest);
+                    questUIManager?.ShowQuests();
+                    questItemManager?.ShowQuestItems(testQuest);
+                }
+            }
         }
     }
 }
