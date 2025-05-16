@@ -18,4 +18,4 @@ MonoBehaviour:
   objectives:
   - {fileID: 11400000, guid: 56943648271c4234a9a67896acf9a4c4, type: 2}
   rewards:
-  - {fileID: 11400000, guid: 737eb0b4c5382394ca39ba8ed080026b, type: 2}
+  - {fileID: 11400000, guid: 59f4d435c918c504085e98d04374fd8c, type: 2}

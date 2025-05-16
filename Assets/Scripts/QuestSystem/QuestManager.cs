@@ -55,6 +55,16 @@ public class QuestManager : MonoBehaviour
         return isQuestAssigned;
     }
 
+    public QuestInstance GetActiveQuestBySO(QuestSO questSO)
+    {
+        foreach (var quest in activeQuests)
+        {
+            if (quest.questData == questSO)
+                return quest;
+        }
+        return null;
+    }
+
     public void ResetQuest(string itemId)
     {
         foreach (var quest in activeQuests)

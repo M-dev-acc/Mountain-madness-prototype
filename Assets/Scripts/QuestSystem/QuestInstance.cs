@@ -48,5 +48,10 @@ public class QuestInstance
             if (obj.itemId == itemId) return obj.requiredAmount;
         return 0;
     }
+
+    public QuestRewardSO[] GetRewards()
+    {
+        return questData.rewards;
+    }
 }
 

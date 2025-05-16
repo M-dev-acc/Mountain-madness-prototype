@@ -8,7 +8,7 @@ public class HealthManager : MonoBehaviour
 
     public event Action OnDeath;
     public float maxStamina = 100f;
-    public float staminaDrain = 2f;
+    public float staminaDrain = 3.5f;
     public float staminaRegen = 5f;
     public float criticalStaminaLevel = 35f;
     private bool warnedLowStamina = false;

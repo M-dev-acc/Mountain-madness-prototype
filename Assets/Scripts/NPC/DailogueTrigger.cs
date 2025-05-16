@@ -11,15 +11,29 @@ public class DailogueTrigger : MonoBehaviour
     [SerializeField] private QuestItemManager questItemManager;
 
     private int intercationCount = 0;
+    private CharacterMovement player;
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player") && intercationCount == 0)
+        if (other.CompareTag("Player"))
         {
-            dialogueManager.StartDialogue(dialogueData);
-            CharacterMovement player = other.gameObject.GetComponent<CharacterMovement>();
-            player?.SetMovement(false);
-            intercationCount++;
+            player = other.gameObject.GetComponent<CharacterMovement>();
+
+            if (intercationCount == 0)
+            {
+                dialogueManager.StartDialogue(dialogueData);
+                player?.SetMovement(false);
+            }
+            else if (intercationCount > 0)
+            {
+                QuestInstance activeQuest = questManager.GetActiveQuestBySO(testQuest);
+                if (activeQuest.IsCompleted)
+                {
+                    player?.SetMovement(false);
+                    activeQuest.GetRewards()[0].ApplyEffect(other.gameObject);
+                    Debug.Log(HealthManager.Instance.staminaDrain);
+                }
+            }
         }
     }
 
@@ -27,7 +41,11 @@ public class DailogueTrigger : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            CharacterMovement player = other.gameObject.GetComponent<CharacterMovement>();
+            if (player == null)
+            {
+                player = other.gameObject.GetComponent<CharacterMovement>();
+            }
+
             if (!dialogueManager.IsDialogueRunning())
             {
                 player?.SetMovement(true);
@@ -40,5 +58,10 @@ public class DailogueTrigger : MonoBehaviour
                 }
             }
         }
+    }
+
+    void OnTriggerExit(Collider other)
+    {
+        intercationCount++;
     }
 }
