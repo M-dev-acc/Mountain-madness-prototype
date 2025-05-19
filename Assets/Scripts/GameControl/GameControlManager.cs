@@ -16,6 +16,12 @@ public class GameControlManager : MonoBehaviour
                 PauseGame();
         }
     }
+    public void PlayGame()
+    {
+        SceneManager.LoadSceneAsync(1);
+    }
+     
+     
 
     public void PauseGame()
     {
