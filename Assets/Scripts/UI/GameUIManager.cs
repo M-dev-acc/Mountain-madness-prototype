@@ -7,6 +7,7 @@ public class GameUIManager : MonoBehaviour
     [Header("UI Screens")]
     [SerializeField] private GameObject gameOverScreen;
     [SerializeField] private GameObject pauseMenu;
+    [SerializeField] private GameObject startGameUI;
     [SerializeField] private GameObject hud;
 
     private void Awake()
@@ -21,11 +22,6 @@ public class GameUIManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
 
         HideAllScreens();
-    }
-
-    private void Start()
-    {
-        ShowHUD();
     }
 
     private void HideAllScreens()
@@ -52,6 +48,18 @@ public class GameUIManager : MonoBehaviour
     {
         pauseMenu?.SetActive(false);
         Time.timeScale = 1f;
+    }
+
+    public void ShowStartGameUI()
+    {
+        gameOverScreen?.SetActive(true);
+        startGameUI?.SetActive(true);
+        Time.timeScale = 0f;
+    }
+
+    public void HideStartGameUI()
+    {
+        startGameUI?.SetActive(false);
     }
 
     public void ShowHUD()

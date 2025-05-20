@@ -5,6 +5,11 @@ public class GameControlManager : MonoBehaviour
 {
     private bool isGamePaused = false;
 
+    void Start()
+    {
+        GameUIManager.Instance.ShowStartGameUI();
+    }
+
     private void Update()
     {
         // Toggle pause with Escape or Android back button
@@ -17,7 +22,13 @@ public class GameControlManager : MonoBehaviour
         }
     }
 
-    // Start game
+    public void StartGame()
+    {
+        GameUIManager.Instance.HideStartGameUI();
+        GameUIManager.Instance.ShowHUD();
+        Time.timeScale = 1f;
+    }
+
     public void PlayGame()
     {
         SceneManager.LoadSceneAsync(1);
