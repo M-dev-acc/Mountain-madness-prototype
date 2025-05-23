@@ -19,7 +19,6 @@ public class GameUIManager : MonoBehaviour
         }
 
         Instance = this;
-        DontDestroyOnLoad(gameObject);
 
         HideAllScreens();
     }
@@ -52,8 +51,12 @@ public class GameUIManager : MonoBehaviour
 
     public void ShowStartGameUI()
     {
-        gameOverScreen?.SetActive(true);
-        startGameUI?.SetActive(true);
+        if (gameOverScreen != null)
+            gameOverScreen.SetActive(true);
+
+        if (startGameUI != null)
+            startGameUI.SetActive(true);
+
         Time.timeScale = 0f;
     }
 

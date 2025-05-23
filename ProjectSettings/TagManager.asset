@@ -8,6 +8,11 @@ TagManager:
   - Environment
   - Water
   - silver_bloom
+  - UIScreenCanvas
+  - MainMenuScreen
+  - EndGameScreen
+  - PauseGameScreen
+  - HUDCanvas
   layers:
   - Default
   - TransparentFX

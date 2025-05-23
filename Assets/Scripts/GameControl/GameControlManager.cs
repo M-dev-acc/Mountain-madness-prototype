@@ -4,10 +4,23 @@ using UnityEngine.SceneManagement;
 public class GameControlManager : MonoBehaviour
 {
     private bool isGamePaused = false;
+    public static bool gameRestarted = false;
 
     void Start()
     {
-        GameUIManager.Instance.ShowStartGameUI();
+        if (!gameRestarted)
+        {
+            GameUIManager.Instance.ShowStartGameUI();
+        }
+        else
+        {
+            // Resume game normally after restart
+            Time.timeScale = 1f;
+            GameUIManager.Instance.HideStartGameUI();
+            GameUIManager.Instance.ShowHUD();
+
+            gameRestarted = false; // Reset flag
+        }
     }
 
     private void Update()
@@ -51,8 +64,8 @@ public class GameControlManager : MonoBehaviour
     public void RestartGame()
     {
         Time.timeScale = 1f;
+        gameRestarted = true;
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-        // GameUIManager.Instance.HidePauseMenu();
     }
 
     public void QuitGame()

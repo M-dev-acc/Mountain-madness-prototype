@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 public class GameOverManager : MonoBehaviour
 {
@@ -15,12 +16,16 @@ public class GameOverManager : MonoBehaviour
 
     private void HandleGameOver()
     {
-        new WaitForSeconds(3f);
+        StartCoroutine(ShowGameOverAfterDelay());
+    }
+
+    private IEnumerator ShowGameOverAfterDelay()
+    {
+        yield return new WaitForSeconds(1.5f);
 
         gameUIManager.ShowGameOver();
         gameUIManager.ShowPauseMenu();
 
-        // Optionally: Pause the game
         Time.timeScale = 0f;
         CharacterMovement.Instance.SetMovement(false);
     }
