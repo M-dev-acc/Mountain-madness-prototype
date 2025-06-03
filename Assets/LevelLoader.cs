@@ -1,26 +1,37 @@
 using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
-public class LevelLoader : MonoBehaviour
+public class LevelLoader : MonoBehaviour {
 
-public void LoadLevel (int SceneIndex)
+    public GameObject loadingScreen;
+    public Slider slider;
+    public TMP_Text progressText;
+    public static LevelLoader instance;
+    public void LoadLevel(int SceneIndex)
 
-{
-    StartCoroutine(LoadSceneAsynchronously(SceneIndex));
-}
+    {
+        StartCoroutine(LoadAsynchronously(SceneIndex));
+    }
 
-IEnumerator LoadAsynchronously(int sceneIndex)
+IEnumerator LoadAsynchronously (int sceneIndex)
 {
     AsyncOperation operation = SceneManager.LoadSceneAsync(sceneIndex);
+    
+    loadingScreen.SetActive(true);
 
     while (!operation.isDone)
-    {
-        Debug.Log(operation.progress);
+        {
+            float progress = Mathf.Clamp01(operation.progress / .9f);
 
-        yield return null;
-    }
+            slider.value = progress;
+            progressText.text = progress * 100f + "%";
+
+            yield return null;
+        }
 }
-{
+
  
 }
