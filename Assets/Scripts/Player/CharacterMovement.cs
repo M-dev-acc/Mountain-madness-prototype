@@ -4,6 +4,7 @@ using UnityEngine;
 public class CharacterMovement : MonoBehaviour
 {
     public static CharacterMovement Instance { get; private set; }
+
     public CharacterController controller;
     public CinemachineFreeLook camera;
 
@@ -11,7 +12,9 @@ public class CharacterMovement : MonoBehaviour
     public float hopDistance = 1.3f;
     public float hopHeight = 1.3f;
     public float hopDuration = 0.3f;
-    
+
+    public AnimationCurve hopCurve = AnimationCurve.EaseInOut(0, 0, 1, 1);
+
     private bool isHopping = false;
     private bool canMove = true;
 
@@ -57,7 +60,6 @@ public class CharacterMovement : MonoBehaviour
 
         HandleInput();
         SmoothRotate();
-        // RegenerateStamina();
     }
 
     void FixedUpdate()
@@ -65,7 +67,7 @@ public class CharacterMovement : MonoBehaviour
         isGrounded = controller.isGrounded;
 
         if (isGrounded && velocity.y < 0f)
-            velocity.y = -2f; // small downward force to keep grounded
+            velocity.y = -2f;
 
         if (isHopping)
         {
@@ -88,11 +90,11 @@ public class CharacterMovement : MonoBehaviour
             RotateLeft();
         else if (Input.GetKeyDown(KeyCode.RightArrow))
             RotateRight();
-        else if (Input.GetKeyDown(KeyCode.Space) && isGrounded && healthManager.DecreaseStamina(healthManager.staminaDrain)){
+        else if (Input.GetKeyDown(KeyCode.UpArrow) && isGrounded && healthManager.DecreaseStamina(healthManager.staminaDrain))
+        {
             StartHop();
-            animator.Play("Jump.001");
+            // animator.SetTrigger("Hop"); // Optional: trigger hop animation
         }
-
     }
 
     // -----------------------------
@@ -120,36 +122,40 @@ public class CharacterMovement : MonoBehaviour
     }
 
     // -----------------------------
-    // Hop System with Grid Snapping
+    // Hop System with Smooth Curve
     // -----------------------------
     void StartHop()
     {
         isHopping = true;
-
         hopTimer = 0f;
-        hopStartPos = SnapToGrid(cachedTransform.position); // Snaps to grid
-        hopEndPos = SnapToGrid(hopStartPos + cachedTransform.forward * hopDistance); // Snaps to grid
+
+        hopStartPos = SnapToGrid(cachedTransform.position);
+        hopEndPos = SnapToGrid(hopStartPos + cachedTransform.forward * hopDistance);
     }
 
     void HandleHop()
     {
         hopTimer += Time.fixedDeltaTime;
-        float t = hopTimer / hopDuration;
+        float t = Mathf.Clamp01(hopTimer / hopDuration);
+
+        Vector3 horizontal = Vector3.Lerp(hopStartPos, hopEndPos, t);
+        float verticalOffset = hopCurve.Evaluate(t) * hopHeight;
+        Vector3 targetPos = horizontal + Vector3.up * verticalOffset;
+
+        Vector3 move = targetPos - cachedTransform.position;
+        controller.Move(move);
 
         if (t >= 1f)
         {
-            controller.Move(hopEndPos - cachedTransform.position); // final snap
             isHopping = false;
-            return;
+            controller.Move(hopEndPos - cachedTransform.position); // Final snap
+            // animator.SetTrigger("Land"); // Optional: trigger land animation
         }
-        Vector3 horizontal = Vector3.Lerp(hopStartPos, hopEndPos, t);
-        float verticalOffset = Mathf.Sin(t * Mathf.PI) * hopHeight;
-        Vector3 targetPos = horizontal + Vector3.up * verticalOffset;
-
-        controller.Move(targetPos - cachedTransform.position);
     }
 
-    // Snapping function to align with grid
+    // -----------------------------
+    // Grid Snapping
+    // -----------------------------
     Vector3 SnapToGrid(Vector3 position)
     {
         return new Vector3(
@@ -167,8 +173,6 @@ public class CharacterMovement : MonoBehaviour
         velocity.y += gravity * Time.fixedDeltaTime;
         controller.Move(velocity * Time.fixedDeltaTime);
     }
-
-    
 
     // -----------------------------
     // Public Controls
