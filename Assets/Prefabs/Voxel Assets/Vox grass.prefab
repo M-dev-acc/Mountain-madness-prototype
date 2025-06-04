@@ -48,6 +48,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7635826562936255635, guid: 389a23a4c09265a45afb01bb641e0a33, type: 3}
+      propertyPath: m_Materials.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: -7635826562936255635, guid: 389a23a4c09265a45afb01bb641e0a33, type: 3}
+      propertyPath: m_Materials.Array.data[1]
+      value: 
+      objectReference: {fileID: 2100000, guid: 1dd2e7a66c591584f827d34e74b76975, type: 2}
     - target: {fileID: 919132149155446097, guid: 389a23a4c09265a45afb01bb641e0a33, type: 3}
       propertyPath: m_Name
       value: Vox grass
