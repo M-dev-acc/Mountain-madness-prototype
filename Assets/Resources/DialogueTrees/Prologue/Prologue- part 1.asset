@@ -12,11 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab549d7455a6b574b881f06c131bb396, type: 3}
   m_Name: Prologue- part 1
   m_EditorClassIdentifier: 
-  speakerName: Narrator
+  speakerName: Maa-rgaret
   dialogueText: "Ah, there you are, dear player. Welcome to our lovely little mountain.
     I\u2019m Maa-rgaret \u2014 yes, with two A's, thank you very much \u2014 proud
     mother, professional grass critic, and part-time narrator of this silly adventure
     you're about to begin."
   dialogueChoices:
-  - choiceText: Part 2
-    nextNode: {fileID: 11400000, guid: 505882d4dbc067b438eb64e94a05e5c7, type: 2}
+  - choiceText: Do I get to climb Everything?
+    nextNode: {fileID: 11400000, guid: f0a0403ca4a3a4749be4821ab1a4701f, type: 2}
+  - choiceText: Uh... what's with these graphics?
+    nextNode: {fileID: 11400000, guid: d3142cfe57c550643ab38297ef0f8595, type: 2}

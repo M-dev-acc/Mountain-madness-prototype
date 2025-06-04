@@ -10,11 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ab549d7455a6b574b881f06c131bb396, type: 3}
-  m_Name: Prologue- Part 3
+  m_Name: Reply - Do I get to climb
   m_EditorClassIdentifier: 
   speakerName: Maa-rgaret
-  dialogueText: "And where\u2019s that wild goat of mine? Probably testing the limits
-    of gravity\u2014and common sense\u2014once more."
+  dialogueText: "Oh, you're a climber, are you? A real hoof-hopper! Good. This voxel
+    world\u2019s not just blocks and beauty \u2014 it bites back. Especially the
+    plants. And the rocks. And gravity."
   dialogueChoices:
-  - choiceText: Shout at the character
-    nextNode: {fileID: 11400000, guid: 405e1fda2bdc3e1449b5fc5b6c1941e4, type: 2}
+  - choiceText: Prologue progression
+    nextNode: {fileID: 11400000, guid: 505882d4dbc067b438eb64e94a05e5c7, type: 2}
