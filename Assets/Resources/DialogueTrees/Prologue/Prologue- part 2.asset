@@ -13,10 +13,8 @@ MonoBehaviour:
   m_Name: Prologue- part 2
   m_EditorClassIdentifier: 
   speakerName: Narrator
-  dialogueText: "While others live quietly, content with the safety of the valley,
-    Sprig dreams of adventure \u2014 of climbing towering cliffs, crossing rushing
-    rivers, and uncovering the hidden wonders scattered across every corner of Mountain
-    Madness."
+  dialogueText: "Speaking of madness, where is that child of mine? He\u2019s probably
+    trying to climb something he shouldn't, again."
   dialogueChoices:
   - choiceText: 
     nextNode: {fileID: 11400000, guid: 98e116c5fabe0464894f1b3f173412e1, type: 2}

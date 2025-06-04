@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: Prologue- part 1
   m_EditorClassIdentifier: 
   speakerName: Narrator
-  dialogueText: 'At the foot of Mountain Madness, a land full of adventure, ancient
-    herbs, and hidden dangers, lives a young goat named Sujah.
-
-'
+  dialogueText: "Ah, there you are, dear player. Welcome to our lovely little mountain.
+    I\u2019m Maa-rgaret \u2014 yes, with two A's, thank you very much \u2014 proud
+    mother, professional grass critic, and part-time narrator of this silly adventure
+    you're about to begin."
   dialogueChoices:
   - choiceText: Part 2
     nextNode: {fileID: 11400000, guid: 505882d4dbc067b438eb64e94a05e5c7, type: 2}

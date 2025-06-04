@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Prologue- Part 3
   m_EditorClassIdentifier: 
   speakerName: Narrator
-  dialogueText: "This season, his heart is set on adventure \u2014 let's see where
-    his desires lead him. The mountains whisper his name.\nSprig is ready to answer."
+  dialogueText: Billyyy! Get your hooves over here before I have to narrate your
+    embarrassing baby photo album instead!
   dialogueChoices: []

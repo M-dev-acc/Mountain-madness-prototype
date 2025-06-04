@@ -30,6 +30,7 @@ public class CharacterMovement : MonoBehaviour
     private bool isGrounded;
 
     private HealthManager healthManager;
+    private Animator animator;
 
     void Awake()
     {
@@ -41,6 +42,7 @@ public class CharacterMovement : MonoBehaviour
     {
         healthManager = HealthManager.Instance;
         targetRotation = cachedTransform.rotation;
+        animator = GetComponentInChildren<Animator>();
 
         if (camera != null)
         {
@@ -86,8 +88,11 @@ public class CharacterMovement : MonoBehaviour
             RotateLeft();
         else if (Input.GetKeyDown(KeyCode.RightArrow))
             RotateRight();
-        else if (Input.GetKeyDown(KeyCode.Space) && isGrounded && healthManager.DecreaseStamina(healthManager.staminaDrain))
+        else if (Input.GetKeyDown(KeyCode.Space) && isGrounded && healthManager.DecreaseStamina(healthManager.staminaDrain)){
             StartHop();
+            animator.Play("Jump.001");
+        }
+
     }
 
     // -----------------------------
@@ -137,7 +142,6 @@ public class CharacterMovement : MonoBehaviour
             isHopping = false;
             return;
         }
-
         Vector3 horizontal = Vector3.Lerp(hopStartPos, hopEndPos, t);
         float verticalOffset = Mathf.Sin(t * Mathf.PI) * hopHeight;
         Vector3 targetPos = horizontal + Vector3.up * verticalOffset;
