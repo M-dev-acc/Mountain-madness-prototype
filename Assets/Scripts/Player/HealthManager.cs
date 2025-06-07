@@ -69,6 +69,8 @@ public class HealthManager : MonoBehaviour
         {
             stamina -= amount;
 
+            WarnLowStamins();
+
             if (stamina <= 0)
             {
                 stamina = 0;
@@ -95,12 +97,25 @@ public class HealthManager : MonoBehaviour
 
     private void Die()
     {
-       
+
         OnDeath?.Invoke();
     }
 
     public float GetStaminaPercent()
     {
         return stamina / maxStamina;
+    }
+
+    private void WarnLowStamins()
+    {
+        if (stamina <= criticalStaminaLevel && !warnedLowStamina)
+        {
+            Debug.Log("Stamina is low — rest or eat!");
+            warnedLowStamina = true;
+        }
+        else if (stamina > criticalStaminaLevel)
+        {
+            warnedLowStamina = false;
+        }
     }
 }

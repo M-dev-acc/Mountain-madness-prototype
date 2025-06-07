@@ -3,6 +3,9 @@ using UnityEngine.SceneManagement;
 
 public class GameControlManager : MonoBehaviour
 {
+    // [SerializeField] private DialogueManager dialogueManager;
+    // [SerializeField] private DialogueData dialogueData;
+
     private bool isGamePaused = false;
     public static bool gameRestarted = false;
 
@@ -40,6 +43,8 @@ public class GameControlManager : MonoBehaviour
         GameUIManager.Instance.HideStartGameUI();
         GameUIManager.Instance.ShowHUD();
         Time.timeScale = 1f;
+
+        
     }
 
     public void PlayGame()

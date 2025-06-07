@@ -12,11 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab549d7455a6b574b881f06c131bb396, type: 3}
   m_Name: Prologue- part 2
   m_EditorClassIdentifier: 
-  speakerName: Narrator
-  dialogueText: "While others live quietly, content with the safety of the valley,
-    Sprig dreams of adventure \u2014 of climbing towering cliffs, crossing rushing
-    rivers, and uncovering the hidden wonders scattered across every corner of Mountain
-    Madness."
+  speakerName: Maa-rgaret
+  dialogueText: "Speaking of madness, where is that child of mine? He\u2019s probably
+    trying to climb something he shouldn't, again."
   dialogueChoices:
-  - choiceText: 
-    nextNode: {fileID: 11400000, guid: 98e116c5fabe0464894f1b3f173412e1, type: 2}
+  - choiceText: Where is the player?
+    nextNode: {fileID: 11400000, guid: 3b121e95df588c54fb433bb71abc60f6, type: 2}

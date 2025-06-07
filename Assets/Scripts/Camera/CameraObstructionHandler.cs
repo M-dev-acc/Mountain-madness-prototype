@@ -3,6 +3,8 @@ using System.Collections.Generic;
 
 public class CameraObstructionHandler : MonoBehaviour
 {
+    public float sphereRadius;
+
     [Tooltip("Transparency level of obstructing objects.")]
     [Range(0.1f, 1f)]
     public float transparency = 0.3f;
@@ -43,11 +45,23 @@ public class CameraObstructionHandler : MonoBehaviour
         direction.Normalize();
 
         frameHits.Clear();
-        int hitCount = Physics.RaycastNonAlloc(transform.position, direction, rayHits, distance, obstructionMask);
+
+        // Replace ray with spherecast: small radius like 0.5
+        float sphereRadius = 0.5f;
+        int hitCount = Physics.SphereCastNonAlloc(transform.position, sphereRadius, direction, rayHits, distance, obstructionMask);
 
         for (int i = 0; i < hitCount; i++)
         {
             RaycastHit hit = rayHits[i];
+            Collider hitCollider = hit.collider;
+            // ✅ Skip if the player is inside the collider (e.g., standing on or touching it)
+            if (hitCollider.bounds.Contains(player.position))
+                continue;
+
+            // ✅ Skip if the collider is very close to the player (like platforms or blocks near feet)
+            if (Vector3.Distance(hitCollider.ClosestPoint(player.position), player.position) < 0.5f)
+                continue;
+
             Renderer rend = hit.collider.GetComponentInChildren<Renderer>();
 
             if (rend != null)
